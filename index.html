@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram User Verification</title>
+</head>
+<body>
+
+  <script>
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    async function loadAndExecute() {
+      try {
+        await loadScript("https://telegram.org/js/telegram-web-app.js");
+        await loadScript("https://cdn.jsdelivr.net/npm/@thumbmarkjs/thumbmarkjs/dist/thumbmark.umd.js");
+        await loadScript("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js");
+
+        let tg = window.Telegram.WebApp;
+        const user_agent = await ThumbmarkJS.getFingerprint();
+
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        const deviceUa = result.visitorId;
+        const ip = '2409:4073:2eb8:d470:c4d2:3c15:1f37:b678';
+        
+        bodyy = "user_id: "+tg.initDataUnsafe.user.id+"\nip: ip,ua: "+user_agent+"\ndeviceUa: "+deviceUa+"\ndata: "+tg.initData+"\nbotHash: "+new URLSearchParams(window.location.search).get('botHash')+"\nbot: "+new URLSearchParams(window.location.search).get('bot');
+          
+        alert(bodyy)
+        
+        
+        let afetch = await fetch('https://bot.rungen.in/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: tg.initDataUnsafe.user.id,
+            ip: ip,
+            ua: user_agent,
+            deviceUa: deviceUa,
+            data: tg.initData,
+            botHash: new URLSearchParams(window.location.search).get('botHash'),
+            bot: new URLSearchParams(window.location.search).get('bot')
+          })
+        });
+        
+        
+        let data = await afetch.json();
+
+        if (data.ok) {
+          tg.showAlert('Verified Successfully', [false, false]);
+          tg.close();
+        } else {
+          tg.showConfirm('Same device', [false, false]);
+          tg.close();
+        }
+      } catch (error) {
+        console.error('Error loading scripts:', error);
+      }
+    }
+
+    loadAndExecute();
+  </script>
+</body>
+  </html>
