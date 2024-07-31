@@ -32,7 +32,7 @@
         const deviceUa = result.visitorId;
         const ip = '2409:4073:2eb8:d470:c4d2:3c15:1f37:b678';
         
-        bodyy = "user_id: "+tg.initDataUnsafe.user.id+"\nip: ip,ua: "+user_agent+"\ndeviceUa: "+deviceUa+"\ndata: "+tg.initData+"\nbotHash: "+new URLSearchParams(window.location.search).get('botHash')+"\nbot: "+new URLSearchParams(window.location.search).get('bot');
+        var bodyy = "user_id: "+tg.initDataUnsafe.user.id+"\nip: ip,ua: "+user_agent+"\ndeviceUa: "+deviceUa+"\ndata: "+tg.initData+"\nbotHash: "+new URLSearchParams(window.location.search).get('botHash')+"\nbot: "+new URLSearchParams(window.location.search).get('bot');
           
         alert(bodyy)
         
